@@ -12,7 +12,7 @@ public protocol NnUpdater {
 
 
 // MARK: - FireUpdater
-final class NnFireUpdater {
+public final class NnFireUpdater {
     
     public init() { }
 }
@@ -21,7 +21,7 @@ final class NnFireUpdater {
 // MARK: - SingleUpdate
 extension NnFireUpdater: NnUpdater {
     
-    func singleUpdate<T>(_ item: UpdateItem<T>,
+    public func singleUpdate<T>(_ item: UpdateItem<T>,
                                 completion: @escaping (Error?) -> Void) where T: Encodable {
         do {
             guard let ref = FireRefFactory.makeDocRef(item.info) else {

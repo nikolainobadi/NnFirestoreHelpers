@@ -18,13 +18,13 @@ public struct FireEndpointInfo: Equatable {
     
     
     // MARK: - Init
-    init(collection: String,
-         docId: String? = nil,
-         nestedCollection: String? = nil,
-         nestedId: String? = nil,
-         listen: Bool = false,
-         listenerTag: Int? = nil,
-         disableOffline: Bool = false) {
+    public init(collection: String,
+                docId: String? = nil,
+                nestedCollection: String? = nil,
+                nestedId: String? = nil,
+                listen: Bool = false,
+                listenerTag: Int? = nil,
+                disableOffline: Bool = false) {
         
         self.collection = collection
         self.docId = docId
