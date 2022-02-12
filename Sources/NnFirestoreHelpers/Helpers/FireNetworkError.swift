@@ -5,7 +5,7 @@
 //  Created by Nikolai Nobadi on 2/12/22.
 //
 
-enum NetworkError: Error {
+public enum NetworkError: Error {
     
     case wrongPassword
     case emailAlreadyInUse
@@ -31,7 +31,7 @@ enum NetworkError: Error {
 
 
 // MARK: - Message
-extension NetworkError {
+public extension NetworkError {
     
     var message: String {
         switch self {
