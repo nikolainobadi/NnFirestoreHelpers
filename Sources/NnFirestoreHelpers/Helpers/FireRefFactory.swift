@@ -13,6 +13,10 @@ public final class FireRefFactory {
     
     private init()  { }
     
+    public static func makeBatch() -> WriteBatch {
+        db.batch()
+    }
+    
     public static func makeCollectionRef(_ info: FireEndpointInfo) -> CollectionReference {
         
         let ref = db.collection(info.collection)

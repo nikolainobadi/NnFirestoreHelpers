@@ -1,11 +1,11 @@
 import XCTest
-@testable import NnFirestoreHelpers
+import NnFirestoreHelpers
 
 final class NnFirestoreHelpersTests: XCTestCase {
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(NnFirestoreHelpers().text, "Hello, World!")
+    
+    func test_batchUpdater() {
+        let factory = NnBatchUpdaterFactory()
+        let updater = factory.makeBatchUpdater()
+    
     }
 }
