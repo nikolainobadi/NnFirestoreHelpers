@@ -8,9 +8,11 @@
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
-final class NnFireReader {
+public final class NnFireReader {
     
     private var listeners = [FireListener]()
+    
+    public init() { }
 
     deinit {
         removeAllListeners()
@@ -21,21 +23,19 @@ final class NnFireReader {
 // MARK: - Reader
 extension NnFireReader: NnReader {
     
-    func removeListener(tag: Int) {
+    public func removeListener(tag: Int) {
         if let index = listeners.firstIndex(where: { $0.tag == tag }) {
             listeners[index].removeListener()
             listeners.remove(at: index)
         }
     }
     
-    func removeAllListeners() {
+    public func removeAllListeners() {
         listeners.forEach { $0.removeListener() }
         listeners = []
     }
     
-    
-    // MARK: Single Read
-    func singleRead<T: Decodable>(info: FireEndpointInfo,
+    public func singleRead<T: Decodable>(info: FireEndpointInfo,
                                   completion: @escaping FireSingleCompletion<T>) {
         do {
             try fetchSingleDocument(
@@ -45,6 +45,37 @@ extension NnFireReader: NnReader {
             completion(.failure(FireErrorConverter.convertError(error)))
         }
     }
+    
+    
+    
+    
+    // MARK: Multi Read
+    public func multiRead<T: Decodable>(info: FireEndpointInfo,
+                                 completion: @escaping FireMultiCompletion<T>) {
+
+        let ref = FireRefFactory.makeCollectionRef(info)
+
+        fetchDocList(query: ref, listen: info.listen, completion: decodeMultiResponse(disableOffline: info.disableOffline, completion: completion))
+    }
+}
+
+
+// MARK: - Queries
+extension NnFireReader: NnQueryReader {
+    
+    public func textQuery<T>(_ info: FireQueryInfo,
+                             completion: @escaping FireMultiCompletion<T>) where T: Decodable {
+        fetchDocList(
+            query: info.query,
+            listen: info.listen,
+            completion: decodeMultiResponse(disableOffline: info.disableOffline,
+                                            completion: completion))
+    }
+}
+
+
+// MARK: - Private Methods
+private extension NnFireReader {
     
     func fetchSingleDocument(info: FireEndpointInfo,
                              completion: @escaping FIRDocumentSnapshotBlock) throws {
@@ -89,16 +120,6 @@ extension NnFireReader: NnReader {
         }
     }
     
-    
-    // MARK: Multi Read
-    func multiRead<T: Decodable>(info: FireEndpointInfo,
-                                 completion: @escaping FireMultiCompletion<T>) {
-
-        let ref = FireRefFactory.makeCollectionRef(info)
-
-        fetchDocList(query: ref, listen: info.listen, completion: decodeMultiResponse(disableOffline: info.disableOffline, completion: completion))
-    }
-    
     func fetchDocList(query: Query,
                       listen: Bool,
                       completion: @escaping FIRQuerySnapshotBlock) {
@@ -129,19 +150,5 @@ extension NnFireReader: NnReader {
                 completion(.failure(FireErrorConverter.convertError(error)))
             }
         }
-    }
-}
-
-
-// MARK: - Queries
-extension NnFireReader {
-    
-    func textQuery<T>(_ info: FireQueryInfo,
-                      completion: @escaping FireMultiCompletion<T>) where T: Decodable {
-        fetchDocList(
-            query: info.query,
-            listen: info.listen,
-            completion: decodeMultiResponse(disableOffline: info.disableOffline,
-                                            completion: completion))
     }
 }
