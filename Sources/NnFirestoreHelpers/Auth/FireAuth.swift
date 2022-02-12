@@ -8,12 +8,18 @@
 import FirebaseAuth
 
 public final class FireAuth {
-    
-    // MARK: - Properties
     private let auth = Auth.auth()
     
+    public init() { }
+}
+    
+
+
+// MARK: - UserInfo
+extension FireAuth: FireAuthUserInfo {
     public var userID: String? { auth.currentUser?.uid }
     public var email: String { auth.currentUser?.email ?? "" }
+    public var currentUser: FirebaseAuth.User? { auth.currentUser }
 }
 
 
