@@ -9,9 +9,9 @@ public struct FireEndpointInfo: Equatable {
     
     // MARK: - Properties
     var collection: String
-    var docId: String
+    var docId: String?
     var nestedCollection: String?
-    var nestedId: String
+    var nestedId: String?
     var listen: Bool
     var listenerTag: Int?
     var disableOffline: Bool = false
@@ -19,9 +19,9 @@ public struct FireEndpointInfo: Equatable {
     
     // MARK: - Init
     init(collection: String,
-         docId: String = "",
+         docId: String? = nil,
          nestedCollection: String? = nil,
-         nestedId: String = "",
+         nestedId: String? = nil,
          listen: Bool = false,
          listenerTag: Int? = nil,
          disableOffline: Bool = false) {
