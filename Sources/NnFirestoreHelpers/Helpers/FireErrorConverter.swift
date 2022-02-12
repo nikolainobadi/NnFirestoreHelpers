@@ -10,14 +10,14 @@ import FirebaseAuth
 final class FireErrorConverter {
     private init() { }
     
-    static func convertError(_ error: Error) -> NetworkError {
+    static func convertError(_ error: Error) -> FireNetworkError {
         let code = AuthErrorCode(rawValue: error._code)
         print("error:", error)
         print("errorCode:", code ?? "unknown code")
         return getFireError(code)
     }
     
-    private static func getFireError(_ errorCode: AuthErrorCode?) -> NetworkError {
+    private static func getFireError(_ errorCode: AuthErrorCode?) -> FireNetworkError {
         guard let errorCode = errorCode else { return .unknown }
         
         switch errorCode {

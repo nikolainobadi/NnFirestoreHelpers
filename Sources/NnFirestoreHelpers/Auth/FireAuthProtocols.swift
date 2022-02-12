@@ -31,5 +31,5 @@ public protocol FireLinkCredentialsAuth {
 // MARK: - ResetPassword
 public protocol FireResetPasswordAuth {
     func resetPassword(_ email: String,
-                       completion: @escaping (NetworkError?) -> Void)
+                       completion: @escaping (FireNetworkError?) -> Void)
 }

@@ -36,13 +36,13 @@ extension NnFireReader: NnReader {
     
     // MARK: Single Read
     func singleRead<T: Decodable>(info: FireEndpointInfo,
-                                  completion: @escaping (Result<T, Error>) -> Void) {
+                                  completion: @escaping FireSingleCompletion<T>) {
         do {
             try fetchSingleDocument(
                 info: info,
                 completion: decodeSingleResponse(disableOffline: info.disableOffline, completion: completion))
         } catch {
-            completion(.failure(error))
+            completion(.failure(FireErrorConverter.convertError(error)))
         }
     }
     
@@ -64,13 +64,13 @@ extension NnFireReader: NnReader {
     }
     
     func decodeSingleResponse<T>(disableOffline: Bool,
-                                 completion: @escaping (Result<T, Error>) -> Void) -> FIRDocumentSnapshotBlock where T: Decodable {
+                                 completion: @escaping FireSingleCompletion<T>) -> FIRDocumentSnapshotBlock where T: Decodable {
         
         return { (snapshot, error) in
             do {
                 if let error = error { throw error }
                 guard let snapshot = snapshot, snapshot.exists else {
-                    // MARK: - TODO
+                    completion(.failure(FireNetworkError.dataNotFound))
                     return
                 }
                 
@@ -80,12 +80,11 @@ extension NnFireReader: NnReader {
                     if let object = try snapshot.data(as: T.self) {
                         completion(.success(object))
                     } else {
-                        completion(.failure(NSError(domain: "Test", code: 0)))
+                        completion(.failure(FireNetworkError.decodeError))
                     }
                 }
             } catch {
-                // MARK: - TODO
-                completion(.failure(error))
+                completion(.failure(FireErrorConverter.convertError(error)))
             }
         }
     }
@@ -93,13 +92,11 @@ extension NnFireReader: NnReader {
     
     // MARK: Multi Read
     func multiRead<T: Decodable>(info: FireEndpointInfo,
-                                 completion: @escaping (Result<[T], Error>) -> Void) {
+                                 completion: @escaping FireMultiCompletion<T>) {
 
         let ref = FireRefFactory.makeCollectionRef(info)
 
-        fetchDocList(query: ref, listen: info.listen) { (snapshot, error) in
-
-        }
+        fetchDocList(query: ref, listen: info.listen, completion: decodeMultiResponse(disableOffline: info.disableOffline, completion: completion))
     }
     
     func fetchDocList(query: Query,
@@ -115,7 +112,7 @@ extension NnFireReader: NnReader {
     }
     
     func decodeMultiResponse<T>(disableOffline: Bool,
-                                completion: @escaping (Result<[T], Error>) -> Void) -> FIRQuerySnapshotBlock where T: Decodable {
+                                completion: @escaping FireMultiCompletion<T>) -> FIRQuerySnapshotBlock where T: Decodable {
         
         return { (snapshot, error) in
             do {
@@ -129,39 +126,22 @@ extension NnFireReader: NnReader {
                     try docs.compactMap { try $0.data(as: T.self) }
                 ))
             } catch {
-                completion(.failure(error))
+                completion(.failure(FireErrorConverter.convertError(error)))
             }
         }
     }
-    
-    
-    // MARK: Queries
-//    func textQuery<T>(queryInfo: FireTextQueryInfo,
-//                      completion: @escaping (Result<[T], NetworkError>) -> Void) where T : Decodable {
-//
-//        let query = FireRefFactory.makeTextQuery(queryInfo)
-//
-//        fetchDocList(query: query, listen: queryInfo.listen) { [weak self] (snapshot, error) in
-//
-//            self?.decoder.decodeMultiResponse(
-//                snapshot: snapshot,
-//                error: error,
-//                completion: completion)
-//        }
-//    }
-    
-//    func arrayQuery<T>(queryInfo: FireArrayQueryInfo,
-//                       completion: @escaping (Result<[T], NetworkError>) -> Void) where T : Decodable {
-//
-//        FireRefFactory.makeArrayQuery(queryInfo).getDocuments { [weak self] (snapshot, error) in
-//
-//            self?.decoder.decodeMultiResponse(
-//                snapshot: snapshot,
-//                error: error,
-//                completion: completion)
-//        }
-//    }
 }
 
 
-
+// MARK: - Queries
+extension NnFireReader {
+    
+    func textQuery<T>(_ info: FireQueryInfo,
+                      completion: @escaping FireMultiCompletion<T>) where T: Decodable {
+        fetchDocList(
+            query: info.query,
+            listen: info.listen,
+            completion: decodeMultiResponse(disableOffline: info.disableOffline,
+                                            completion: completion))
+    }
+}

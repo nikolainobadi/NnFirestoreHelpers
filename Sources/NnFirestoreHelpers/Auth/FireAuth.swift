@@ -77,7 +77,7 @@ extension FireAuth: FireLogoutAuth {
 extension FireAuth: FireResetPasswordAuth {
 
     public func resetPassword(_ email: String,
-                       completion: @escaping (NetworkError?) -> Void) {
+                       completion: @escaping (FireNetworkError?) -> Void) {
 
         auth.sendPasswordReset(withEmail: email) { error in
             guard let error = error else { return completion(nil) }
@@ -91,7 +91,7 @@ extension FireAuth: FireResetPasswordAuth {
 // MARK: - Private Methods
 private extension FireAuth {
     
-    func handleAuthResult(_ completion: @escaping (Result<FirebaseAuth.User, NetworkError>) -> Void) -> ((AuthDataResult?, Error?) -> Void) {
+    func handleAuthResult(_ completion: @escaping (Result<FirebaseAuth.User, FireNetworkError>) -> Void) -> ((AuthDataResult?, Error?) -> Void) {
         
         return { (authData, error) in
             if let error = error {
@@ -99,7 +99,7 @@ private extension FireAuth {
             } else {
                 guard
                     let user = authData?.user
-                else { return completion(.failure(NetworkError.userNotFound)) }
+                else { return completion(.failure(FireNetworkError.userNotFound)) }
 
                 completion(.success(user))
             }
@@ -109,5 +109,5 @@ private extension FireAuth {
 
 
 // MARK: - Dependencies
-public typealias AuthCompletion = ((Result<FirebaseAuth.User, NetworkError>) -> Void)
+public typealias AuthCompletion = ((Result<FirebaseAuth.User, FireNetworkError>) -> Void)
 
