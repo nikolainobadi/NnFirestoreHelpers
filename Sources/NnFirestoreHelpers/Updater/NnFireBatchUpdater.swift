@@ -7,7 +7,7 @@
 
 // MARK: - Protocol
 public protocol NnBatchUpdater {
-    func add<T: Encodable>(item: UpdateItem<T>?) throws
+    func add<T: Encodable>(item: UpdateItem<T>) throws
     func batchUpdate(completion: @escaping (Error?) -> Void)
 }
 
@@ -22,12 +22,9 @@ final class NnFireBatchUpdater {
 // MARK: - BatchUpdate
 extension NnFireBatchUpdater: NnBatchUpdater {
     
-    public func add<T>(item: UpdateItem<T>?) throws where T : Encodable {
-        guard let item = item else { return }
+    public func add<T>(item: UpdateItem<T>) throws where T: Encodable {
         guard let ref = FireRefFactory.makeDocRef(item.info) else {
-            // MARK: - TODO
-            // throw error
-            return
+            throw FireNetworkError.updateFail
         }
         
         try batch.setData(from: item.model, forDocument: ref)
