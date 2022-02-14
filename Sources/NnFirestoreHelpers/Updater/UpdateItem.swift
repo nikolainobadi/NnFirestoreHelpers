@@ -6,9 +6,9 @@
 //
 
 public struct UpdateItem<T: Encodable> {
-    var model: T
-    var info: FireEndpointInfo
-    var isDeleting: Bool
+    public var model: T
+    public var info: FireEndpointInfo
+    public var isDeleting: Bool
     
     public init(model: T, info: FireEndpointInfo, isDeleting: Bool = false) {
         self.model = model
