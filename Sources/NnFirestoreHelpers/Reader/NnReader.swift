@@ -18,7 +18,7 @@ public protocol NnReader {
 
 // MARK: - QueryReader
 public protocol NnQueryReader {
-    func textQuery<T>(_ info: FireQueryInfo,
+    func queryRead<T>(_ info: FireQueryInfo,
                       completion: @escaping FireMultiCompletion<T>) where T: Decodable
 }
 

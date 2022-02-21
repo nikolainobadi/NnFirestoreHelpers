@@ -63,7 +63,7 @@ extension NnFireReader: NnReader {
 // MARK: - Queries
 extension NnFireReader: NnQueryReader {
     
-    public func textQuery<T>(_ info: FireQueryInfo,
+    public func queryRead<T>(_ info: FireQueryInfo,
                              completion: @escaping FireMultiCompletion<T>) where T: Decodable {
         fetchDocList(
             query: info.query,
