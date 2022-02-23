@@ -7,6 +7,7 @@
 
 // MARK: Reader
 public protocol NnReader {
+    func removeAllListeners()
     func singleRead<T: Decodable>(
         info: FireEndpointInfo,
         completion: @escaping FireSingleCompletion<T>)
