@@ -108,9 +108,11 @@ private extension NnFireReader {
                 if disableOffline && snapshot.metadata.isFromCache {
                     print("From cache, not available")
                 } else {
-                    let object = try snapshot.data(as: T.self)
-                    
-                    completion(.success(object))
+                    if let object = try snapshot.data(as: T.self) {
+                        completion(.success(object))
+                    } else {
+                        completion(.failure(FireNetworkError.decodeError))
+                    }
                 }
             } catch {
                 completion(.failure(FireErrorConverter.convertError(error)))

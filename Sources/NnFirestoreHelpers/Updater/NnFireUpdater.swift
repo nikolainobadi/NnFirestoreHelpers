@@ -25,19 +25,18 @@ extension NnFireUpdater: NnUpdater {
                                 completion: @escaping (Error?) -> Void) where T: Encodable {
         do {
             guard let ref = FireRefFactory.makeDocRef(item.info) else {
-                // MARK: - TODO
-                // complete with error
-                return
+                return completion(FireNetworkError.badURL)
             }
             
             if item.isDeleting {
                 ref.delete(completion: completion)
             } else {
                 try ref.setData(from: item.model)
+                
+                completion(nil)
             }
         } catch {
-            // MARK: - TODO -> convert error
-            completion(error)
+            completion(FireErrorConverter.convertError(error))
         }
     }
 }
