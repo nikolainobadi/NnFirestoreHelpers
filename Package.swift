@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "NnFirestoreHelpers",
-    platforms: [.macOS(.v10_15), .iOS(.v14)],
+    platforms: [.macOS(.v12), .iOS(.v14)],
     products: [
         .library(
             name: "NnFirestoreHelpers",

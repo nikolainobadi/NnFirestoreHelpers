@@ -46,16 +46,24 @@ extension NnFireReader: NnReader {
         }
     }
     
-    
-    
-    
-    // MARK: Multi Read
     public func multiRead<T: Decodable>(info: FireEndpointInfo,
                                  completion: @escaping FireMultiCompletion<T>) {
 
         let ref = FireRefFactory.makeCollectionRef(info)
 
         fetchDocList(query: ref, listen: info.listen, completion: decodeMultiResponse(disableOffline: info.disableOffline, completion: completion))
+    }
+    
+    public func singleRead<T: Decodable>(info: FireEndpointInfo) async throws -> T {
+        guard let ref = FireRefFactory.makeDocRef(info) else { throw FireNetworkError.badURL }
+        
+        return try await ref.getDocument(as: T.self)
+    }
+    
+    public func multiRead<T: Decodable>(info: FireEndpointInfo) async throws -> [T] {
+        let snapshot = try await FireRefFactory.makeCollectionRef(info).getDocuments()
+        
+        return try snapshot.documents.compactMap { try $0.data(as: T.self) }
     }
 }
 

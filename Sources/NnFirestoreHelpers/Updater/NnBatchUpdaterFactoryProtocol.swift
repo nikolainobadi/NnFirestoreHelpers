@@ -1,16 +1,16 @@
 //
-//  NnBatchUpdaterComposer.swift
+//  NnBatchUpdaterFactory.swift
 //  
 //
 //  Created by Nikolai Nobadi on 2/12/22.
 //
 
-public protocol NnBatchUpdaterComposer {
+public protocol NnBatchUpdaterFactoryProtocol {
     
     func makeBatchUpdater() -> NnBatchUpdater
 }
 
-public final class NnBatchUpdaterComposite: NnBatchUpdaterComposer {
+public final class NnBatchUpdaterFactory: NnBatchUpdaterFactoryProtocol {
     
     public init() { }
     

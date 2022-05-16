@@ -15,7 +15,11 @@ public protocol NnReader {
     func multiRead<T: Decodable>(
         info: FireEndpointInfo,
         completion: @escaping FireMultiCompletion<T>)
+    
+    func singleRead<T: Decodable>(info: FireEndpointInfo) async throws -> T
+    func multiRead<T: Decodable>(info: FireEndpointInfo) async throws -> [T]
 }
+
 
 // MARK: - QueryReader
 public protocol NnQueryReader {
