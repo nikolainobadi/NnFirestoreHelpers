@@ -61,9 +61,7 @@ extension NnFireReader: NnReader {
     }
     
     public func multiRead<T: Decodable>(info: FireEndpointInfo) async throws -> [T] {
-        let snapshot = try await FireRefFactory.makeCollectionRef(info).getDocuments()
-        
-        return try snapshot.documents.compactMap { try $0.data(as: T.self) }
+        try await asyncDocFetch(query: FireRefFactory.makeCollectionRef(info))
     }
 }
 
@@ -78,6 +76,10 @@ extension NnFireReader: NnQueryReader {
             listen: info.listen,
             completion: decodeMultiResponse(disableOffline: info.disableOffline,
                                             completion: completion))
+    }
+    
+    public func queryRead<T: Decodable>(_ info: FireQueryInfo) async throws -> [T] {
+        try await asyncDocFetch(query: info.query)
     }
 }
 
@@ -124,6 +126,12 @@ private extension NnFireReader {
                 completion(.failure(FireErrorConverter.convertError(error)))
             }
         }
+    }
+    
+    func asyncDocFetch<T: Decodable>(query: Query) async throws -> [T] {
+        let snapshot = try await query.getDocuments()
+        
+        return try snapshot.documents.compactMap { try $0.data(as: T.self) }
     }
     
     func fetchDocList(query: Query,

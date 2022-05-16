@@ -25,6 +25,8 @@ public protocol NnReader {
 public protocol NnQueryReader {
     func queryRead<T>(_ info: FireQueryInfo,
                       completion: @escaping FireMultiCompletion<T>) where T: Decodable
+    
+    func queryRead<T: Decodable>(_ info: FireQueryInfo) async throws -> [T]
 }
 
 
