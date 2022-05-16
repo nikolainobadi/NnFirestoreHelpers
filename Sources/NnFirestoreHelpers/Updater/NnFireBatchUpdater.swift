@@ -9,12 +9,12 @@
 public protocol NnBatchUpdater {
     func add<T: Encodable>(item: UpdateItem<T>) throws
     func batchUpdate(completion: @escaping (Error?) -> Void)
+    func batchUpdate() async throws
 }
 
 
 // MARK: - Class
 final class NnFireBatchUpdater {
-    
     private let batch = FireRefFactory.makeBatch()
 }
 
@@ -32,5 +32,9 @@ extension NnFireBatchUpdater: NnBatchUpdater {
     
     public func batchUpdate(completion: @escaping (Error?) -> Void) {
         batch.commit(completion: completion)
+    }
+    
+    public func batchUpdate() async throws {
+        try await batch.commit()
     }
 }
