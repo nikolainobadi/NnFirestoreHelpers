@@ -7,6 +7,7 @@
 
 // MARK: - NnUpdater
 public protocol NnUpdater {
+    func singleUpdate<T: Encodable>(_ item: UpdateItem<T>) async throws
     func singleUpdate<T: Encodable>(_ item: UpdateItem<T>, completion: @escaping (Error?) -> Void)
 }
 
@@ -20,6 +21,22 @@ public final class NnFireUpdater {
 
 // MARK: - SingleUpdate
 extension NnFireUpdater: NnUpdater {
+    
+    public func singleUpdate<T: Encodable>(_ item: UpdateItem<T>) async throws {
+        guard let ref = FireRefFactory.makeDocRef(item.info) else {
+            throw FireNetworkError.badURL
+        }
+        
+        do {
+            if item.isDeleting {
+                try await ref.delete()
+            } else {
+                try ref.setData(from: item.model)
+            }
+        } catch {
+            throw FireErrorConverter.convertError(error)
+        }
+    }
     
     public func singleUpdate<T>(_ item: UpdateItem<T>,
                                 completion: @escaping (Error?) -> Void) where T: Encodable {
