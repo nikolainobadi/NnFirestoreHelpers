@@ -35,6 +35,7 @@ public protocol FireLinkCredentialsAuth {
     func linkCredentials(email: String,
                          password: String,
                          completion: @escaping AuthCompletion)
+    func linkCredentials(email: String, password: String) async throws
 }
 
 // MARK: - ResetPassword

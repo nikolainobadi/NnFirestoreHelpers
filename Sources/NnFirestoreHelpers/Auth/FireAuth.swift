@@ -63,6 +63,12 @@ extension FireAuth: FireLinkCredentialsAuth  {
         auth.currentUser?.link(with: credentials,
                                completion: handleAuthResult(completion))
     }
+    
+    public func linkCredentials(email: String, password: String) async throws {
+        let credentials = EmailAuthProvider.credential(withEmail: email, password: password)
+        
+        try await auth.currentUser?.link(with: credentials)
+    }
 }
 
 
