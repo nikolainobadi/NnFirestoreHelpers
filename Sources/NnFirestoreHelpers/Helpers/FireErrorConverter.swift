@@ -7,7 +7,7 @@
 
 import FirebaseAuth
 
-final class FireErrorConverter {
+public final class FireErrorConverter {
     private init() { }
     
     static func convertError(_ error: Error) -> FireNetworkError {
