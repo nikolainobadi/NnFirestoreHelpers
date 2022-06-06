@@ -13,7 +13,7 @@ public protocol NnUpdater {
 
 
 // MARK: - FireUpdater
-public final class NnFireUpdater {
+public class NnFireUpdater {
     
     public init() { }
 }

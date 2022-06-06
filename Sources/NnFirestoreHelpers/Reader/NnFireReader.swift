@@ -8,7 +8,7 @@
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 
-public final class NnFireReader {
+public class NnFireReader {
     
     private var listeners = [FireListener]()
     

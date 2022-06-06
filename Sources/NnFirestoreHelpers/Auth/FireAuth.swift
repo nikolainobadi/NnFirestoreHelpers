@@ -7,7 +7,7 @@
 
 import FirebaseAuth
 
-public final class FireAuth {
+public class FireAuth {
     private let auth = Auth.auth()
     
     public init() { }

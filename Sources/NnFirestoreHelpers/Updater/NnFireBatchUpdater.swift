@@ -14,7 +14,7 @@ public protocol NnBatchUpdater {
 
 
 // MARK: - Class
-final class NnFireBatchUpdater {
+class NnFireBatchUpdater {
     private let batch = FireRefFactory.makeBatch()
 }
 

@@ -10,7 +10,7 @@ public protocol NnBatchUpdaterFactoryProtocol {
     func makeBatchUpdater() -> NnBatchUpdater
 }
 
-public final class NnBatchUpdaterFactory: NnBatchUpdaterFactoryProtocol {
+public class NnBatchUpdaterFactory: NnBatchUpdaterFactoryProtocol {
     
     public init() { }
     

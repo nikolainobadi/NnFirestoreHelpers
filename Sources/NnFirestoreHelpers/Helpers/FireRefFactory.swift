@@ -7,7 +7,7 @@
 
 import FirebaseFirestore
 
-public final class FireRefFactory {
+public class FireRefFactory {
     
     private static let db = Firestore.firestore()
     
