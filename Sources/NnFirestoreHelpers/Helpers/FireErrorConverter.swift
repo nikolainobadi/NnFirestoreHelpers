@@ -7,9 +7,8 @@
 
 import FirebaseAuth
 
-public class FireErrorConverter {
-    private init() { }
-    
+public enum FireErrorConverter {
+
     public static func convertError(_ error: Error) -> FireNetworkError {
         let code = AuthErrorCode(rawValue: error._code)
         print("error:", error)

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  FireRefFactory.swift
 //  
 //
 //  Created by Nikolai Nobadi on 2/11/22.
@@ -7,11 +7,9 @@
 
 import FirebaseFirestore
 
-public class FireRefFactory {
+public enum FireRefFactory {
     
     private static let db = Firestore.firestore()
-    
-    private init()  { }
     
     public static func makeBatch() -> WriteBatch {
         db.batch()
