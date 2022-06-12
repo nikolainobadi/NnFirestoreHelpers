@@ -35,6 +35,10 @@ extension NnFireBatchUpdater: NnBatchUpdater {
     }
     
     public func batchUpdate() async throws {
-        try await batch.commit()
+        do {
+            try await batch.commit()
+        } catch {
+            throw FireErrorConverter.convertError(error)
+        }
     }
 }

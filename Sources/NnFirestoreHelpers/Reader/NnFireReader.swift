@@ -61,7 +61,12 @@ extension NnFireReader: NnReader {
     }
     
     public func multiRead<T: Decodable>(info: FireEndpointInfo) async throws -> [T] {
-        try await asyncDocFetch(query: FireRefFactory.makeCollectionRef(info))
+        
+        do {
+            return try await asyncDocFetch(query: FireRefFactory.makeCollectionRef(info))
+        } catch {
+            throw FireErrorConverter.convertError(error)
+        }
     }
 }
 
@@ -79,7 +84,12 @@ extension NnFireReader: NnQueryReader {
     }
     
     public func queryRead<T: Decodable>(_ info: FireQueryInfo) async throws -> [T] {
-        try await asyncDocFetch(query: info.query)
+        
+        do {
+            return try await asyncDocFetch(query: info.query)
+        } catch {
+            throw FireErrorConverter.convertError(error)
+        }
     }
 }
 
